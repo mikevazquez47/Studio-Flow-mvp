@@ -3,7 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "StudioFlow",
-  description: "Sistema operativo para estudios boutique de movimiento y fitness.",
+  description:
+    "Sistema operativo para estudios boutique de movimiento y fitness.",
 };
 
 export default function RootLayout({
