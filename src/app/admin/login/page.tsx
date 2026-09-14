@@ -5,7 +5,9 @@ type LoginPageProps = {
   searchParams: Promise<{ error?: string }>;
 };
 
-export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
+export default async function AdminLoginPage({
+  searchParams,
+}: LoginPageProps) {
   const { error } = await searchParams;
 
   async function login(formData: FormData) {
@@ -15,7 +17,9 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
     const password = String(formData.get("password") ?? "");
 
     if (!email || !password) {
-      redirect("/admin/login?error=Completa%20correo%20y%20contrase%C3%B1a");
+      redirect(
+        "/admin/login?error=Completa%20correo%20y%20contrase%C3%B1a",
+      );
     }
 
     const supabase = await createSupabaseServerClient();
@@ -45,7 +49,8 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
         </div>
 
         <p className="auth-copy">
-          Acceso privado para propietarios, administración, recepción e instructores.
+          Acceso privado para propietarios, administración, recepción e
+          instructores.
         </p>
 
         {error ? (
