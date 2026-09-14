@@ -1,9 +1,10 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'StudioFlow',
-  description: 'Sistema operativo para estudios boutique de movimiento y fitness.',
+  title: "StudioFlow",
+  description:
+    "Sistema operativo para estudios boutique de movimiento y fitness.",
 };
 
 export default function RootLayout({
