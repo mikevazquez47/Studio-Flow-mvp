@@ -12,7 +12,9 @@ export async function loginAdmin(
   _previousState: LoginState,
   formData: FormData,
 ): Promise<LoginState> {
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
   const password = String(formData.get("password") ?? "");
 
   if (!email || !password) {
@@ -31,7 +33,8 @@ export async function loginAdmin(
   if (!context) {
     await supabase.auth.signOut();
     return {
-      error: "Tu cuenta no tiene acceso activo a un estudio. Contacta al administrador.",
+      error:
+        "Tu cuenta no tiene acceso activo a un estudio. Contacta al administrador.",
     };
   }
 
