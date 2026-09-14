@@ -16,7 +16,9 @@ export default async function AdminHomePage() {
     .limit(1);
 
   if (membershipError || !memberships?.length) {
-    redirect("/admin/login?error=Tu%20cuenta%20no%20tiene%20acceso%20activo%20a%20un%20estudio");
+    redirect(
+      "/admin/login?error=Tu%20cuenta%20no%20tiene%20acceso%20activo%20a%20un%20estudio",
+    );
   }
 
   const membership = memberships[0];
@@ -31,8 +33,8 @@ export default async function AdminHomePage() {
         <h1>Acceso autorizado.</h1>
         <p>
           {studio?.name ?? "Tu estudio"} ya está resolviendo identidad, sesión y
-          membresía activa desde Supabase. El siguiente paso es convertir esta entrada
-          en el AdminShell operativo.
+          membresía activa desde Supabase. El siguiente paso es convertir esta
+          entrada en el AdminShell operativo.
         </p>
       </section>
     </main>
