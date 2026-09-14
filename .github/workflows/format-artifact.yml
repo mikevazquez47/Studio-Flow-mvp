@@ -1,0 +1,38 @@
+name: Format artifact
+
+on:
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - name: Format Sprint 3 files
+        run: |
+          npx prettier --write \
+            'src/app/admin/(protected)/agenda/page.tsx' \
+            'src/app/admin/(protected)/page.tsx' \
+            'src/app/globals.css' \
+            'src/application/schedule/admin-schedule.ts'
+      - name: Package formatted files
+        run: |
+          mkdir -p formatted/src/app/admin/'(protected)'/agenda
+          mkdir -p formatted/src/application/schedule
+          cp 'src/app/admin/(protected)/agenda/page.tsx' formatted/src/app/admin/'(protected)'/agenda/page.tsx
+          cp 'src/app/admin/(protected)/page.tsx' formatted/src/app/admin/'(protected)'/page.tsx
+          cp src/app/globals.css formatted/src/app/globals.css
+          cp src/application/schedule/admin-schedule.ts formatted/src/application/schedule/admin-schedule.ts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prettier-output
+          path: formatted
+          retention-days: 1
