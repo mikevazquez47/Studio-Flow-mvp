@@ -1,9 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getStudent360 } from "@/application/students/student-actions";
+import { getAdminContext } from "@/application/auth/admin-context";
+import {
+  archiveStudent,
+  getStudent360,
+  reactivateStudent,
+} from "@/application/students/student-actions";
 
 type Student360PageProps = {
   params: Promise<{ studentId: string }>;
+  searchParams: Promise<{ error?: string; reactivated?: string }>;
 };
 
 function formatProfileValue(value: unknown) {
@@ -26,8 +32,22 @@ function formatProfileValue(value: unknown) {
   return String(value);
 }
 
-export default async function Student360Page({ params }: Student360PageProps) {
-  const { studentId } = await params;
+function getStatusLabel(status: string) {
+  if (status === "ACTIVE") return "Activa";
+  if (status === "INACTIVE") return "Inactiva";
+  if (status === "ARCHIVED") return "Archivada";
+  return status;
+}
+
+export default async function Student360Page({
+  params,
+  searchParams,
+}: Student360PageProps) {
+  const [{ studentId }, query, context] = await Promise.all([
+    params,
+    searchParams,
+    getAdminContext(),
+  ]);
   const student = await getStudent360(studentId);
 
   if (!student) {
@@ -35,20 +55,40 @@ export default async function Student360Page({ params }: Student360PageProps) {
   }
 
   const fullName = `${student.firstName} ${student.lastName}`.trim();
+  const canArchive =
+    context.capabilities.includes("students.archive") &&
+    context.capabilities.includes("students.write");
 
   return (
     <section className="admin-page space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
-          href="/admin/alumnas"
+          href={
+            student.status === "ARCHIVED"
+              ? "/admin/alumnas?scope=archived"
+              : "/admin/alumnas"
+          }
           className="text-sm font-bold text-[var(--accent)]"
         >
           ← Volver a alumnas
         </Link>
         <span className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted)]">
-          {student.status === "ACTIVE" ? "Activa" : student.status}
+          {getStatusLabel(student.status)}
         </span>
       </div>
+
+      {query.error ? (
+        <div className="auth-error" role="alert">
+          {query.error}
+        </div>
+      ) : null}
+
+      {query.reactivated ? (
+        <div className="rounded-[var(--radius-md)] border border-[color-mix(in_srgb,var(--success)_45%,var(--border))] bg-[color-mix(in_srgb,var(--success)_10%,var(--surface))] px-4 py-3 text-sm">
+          La alumna fue reactivada y vuelve a estar disponible para la operación
+          del estudio.
+        </div>
+      ) : null}
 
       <header className="rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-sm)]">
         <span className="eyebrow">Perfil 360</span>
@@ -159,6 +199,55 @@ export default async function Student360Page({ params }: Student360PageProps) {
               Sprint 6.
             </p>
           </section>
+
+          {canArchive ? (
+            <section className="rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)] p-6">
+              <span className="eyebrow">Administración</span>
+              {student.status === "ARCHIVED" ? (
+                <>
+                  <h2 className="text-xl font-bold">Reactivar alumna</h2>
+                  <p className="mt-2 text-sm">
+                    Recupera su estado activo sin borrar ni reconstruir su
+                    historial.
+                  </p>
+                  <form action={reactivateStudent} className="mt-5">
+                    <input type="hidden" name="studentId" value={student.id} />
+                    <button
+                      className="primary-button mt-0 w-full px-4"
+                      type="submit"
+                    >
+                      Reactivar alumna
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <details>
+                  <summary className="cursor-pointer text-sm font-bold text-[var(--muted)]">
+                    Archivar alumna
+                  </summary>
+                  <div className="mt-4 rounded-[var(--radius-md)] border border-[color-mix(in_srgb,var(--danger)_40%,var(--border))] bg-[color-mix(in_srgb,var(--danger)_8%,var(--surface))] p-4">
+                    <p className="text-sm">
+                      Se retirará de la operación cotidiana, pero su perfil y su
+                      historial se conservarán. Podrás reactivarla después.
+                    </p>
+                    <form action={archiveStudent} className="mt-4">
+                      <input
+                        type="hidden"
+                        name="studentId"
+                        value={student.id}
+                      />
+                      <button
+                        className="min-h-11 w-full rounded-[var(--radius-md)] border border-[var(--danger)] px-4 text-sm font-bold text-[var(--danger)]"
+                        type="submit"
+                      >
+                        Confirmar archivo
+                      </button>
+                    </form>
+                  </div>
+                </details>
+              )}
+            </section>
+          ) : null}
         </aside>
       </div>
     </section>

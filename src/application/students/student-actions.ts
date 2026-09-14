@@ -64,7 +64,12 @@ export async function createStudentQuick(formData: FormData) {
   redirect(`/admin/alumnas?created=${encodeURIComponent(firstName)}`);
 }
 
-export async function listStudents(searchTerm?: string) {
+type StudentListScope = "current" | "archived";
+
+export async function listStudents(
+  searchTerm?: string,
+  scope: StudentListScope = "current",
+) {
   const context = await getAdminContext();
 
   if (!context.capabilities.includes("students.read")) {
@@ -78,19 +83,13 @@ export async function listStudents(searchTerm?: string) {
       "id,status,profile_status,joined_at,persons!inner(first_name,last_name,person_contacts(type,value,normalized_value,is_primary))",
     )
     .eq("studio_id", context.studio.id)
-    .neq("status", "ARCHIVED")
     .order("joined_at", { ascending: false })
-    .limit(100);
+    .limit(250);
 
-  const normalizedSearch = searchTerm?.trim();
-  if (normalizedSearch) {
-    const safe = normalizedSearch.replace(/[,%()]/g, " ").trim();
-    if (safe) {
-      query = query.or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%`, {
-        referencedTable: "persons",
-      });
-    }
-  }
+  query =
+    scope === "archived"
+      ? query.eq("status", "ARCHIVED")
+      : query.neq("status", "ARCHIVED");
 
   const { data, error } = await query;
 
@@ -98,7 +97,7 @@ export async function listStudents(searchTerm?: string) {
     throw new Error("No se pudo cargar el listado de alumnas.");
   }
 
-  return (data ?? []).map((student) => {
+  const students = (data ?? []).map((student) => {
     const person = Array.isArray(student.persons)
       ? student.persons[0]
       : student.persons;
@@ -112,11 +111,105 @@ export async function listStudents(searchTerm?: string) {
       firstName: person?.first_name ?? "Sin nombre",
       lastName: person?.last_name ?? "",
       phone: primaryPhone?.value ?? "Sin teléfono",
+      normalizedPhone: primaryPhone?.normalized_value ?? "",
       status: student.status,
       profileStatus: student.profile_status,
       joinedAt: student.joined_at,
     };
   });
+
+  const normalizedSearch = searchTerm?.trim().toLocaleLowerCase("es-MX");
+  if (!normalizedSearch) {
+    return students;
+  }
+
+  const searchDigits = normalizedSearch.replace(/\D/g, "");
+
+  return students.filter((student) => {
+    const fullName = `${student.firstName} ${student.lastName}`
+      .trim()
+      .toLocaleLowerCase("es-MX");
+    const phoneMatches =
+      searchDigits.length >= 3 &&
+      student.normalizedPhone.replace(/\D/g, "").includes(searchDigits);
+
+    return fullName.includes(normalizedSearch) || phoneMatches;
+  });
+}
+
+export async function archiveStudent(formData: FormData) {
+  const context = await getAdminContext();
+
+  if (
+    !context.capabilities.includes("students.archive") ||
+    !context.capabilities.includes("students.write")
+  ) {
+    redirect(
+      "/admin/alumnas?error=No%20tienes%20permiso%20para%20archivar%20alumnas",
+    );
+  }
+
+  const studentId = String(formData.get("studentId") ?? "").trim();
+  if (!studentId) {
+    redirect("/admin/alumnas?error=Alumna%20inv%C3%A1lida");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase
+    .from("students")
+    .update({
+      status: "ARCHIVED",
+      archived_at: new Date().toISOString(),
+    })
+    .eq("studio_id", context.studio.id)
+    .eq("id", studentId)
+    .neq("status", "ARCHIVED");
+
+  if (error) {
+    redirect(
+      `/admin/alumnas/${studentId}?error=${encodeURIComponent("No se pudo archivar la alumna.")}`,
+    );
+  }
+
+  revalidatePath("/admin/alumnas");
+  revalidatePath(`/admin/alumnas/${studentId}`);
+  redirect("/admin/alumnas?archived=1");
+}
+
+export async function reactivateStudent(formData: FormData) {
+  const context = await getAdminContext();
+
+  if (
+    !context.capabilities.includes("students.archive") ||
+    !context.capabilities.includes("students.write")
+  ) {
+    redirect(
+      "/admin/alumnas?error=No%20tienes%20permiso%20para%20reactivar%20alumnas",
+    );
+  }
+
+  const studentId = String(formData.get("studentId") ?? "").trim();
+  if (!studentId) {
+    redirect("/admin/alumnas?error=Alumna%20inv%C3%A1lida");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase
+    .from("students")
+    .update({ status: "ACTIVE", archived_at: null })
+    .eq("studio_id", context.studio.id)
+    .eq("id", studentId)
+    .eq("status", "ARCHIVED");
+
+  if (error) {
+    redirect(
+      `/admin/alumnas/${studentId}?error=${encodeURIComponent("No se pudo reactivar la alumna.")}`,
+    );
+  }
+
+  revalidatePath("/admin/alumnas");
+  revalidatePath(`/admin/alumnas/${studentId}`);
+  redirect(`/admin/alumnas/${studentId}?reactivated=1`);
 }
 
 export async function getStudent360(studentId: string) {
