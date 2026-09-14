@@ -127,26 +127,28 @@ export async function getStudent360(studentId: string) {
   }
 
   const supabase = await createSupabaseServerClient();
-  const [{ data: student, error: studentError }, { data: fields, error: fieldsError }] =
-    await Promise.all([
-      supabase
-        .from("students")
-        .select(
-          "id,status,profile_status,joined_at,persons!inner(id,first_name,last_name,person_contacts(type,value,normalized_value,is_primary))",
-        )
-        .eq("studio_id", context.studio.id)
-        .eq("id", studentId)
-        .single(),
-      supabase
-        .from("student_profile_fields")
-        .select(
-          "id,key,label,field_type,category,storage_source,is_system,is_required_for_profile,visible_to_admin,display_order",
-        )
-        .eq("studio_id", context.studio.id)
-        .eq("is_active", true)
-        .eq("visible_to_admin", true)
-        .order("display_order", { ascending: true }),
-    ]);
+  const [
+    { data: student, error: studentError },
+    { data: fields, error: fieldsError },
+  ] = await Promise.all([
+    supabase
+      .from("students")
+      .select(
+        "id,status,profile_status,joined_at,persons!inner(id,first_name,last_name,person_contacts(type,value,normalized_value,is_primary))",
+      )
+      .eq("studio_id", context.studio.id)
+      .eq("id", studentId)
+      .single(),
+    supabase
+      .from("student_profile_fields")
+      .select(
+        "id,key,label,field_type,category,storage_source,is_system,is_required_for_profile,visible_to_admin,display_order",
+      )
+      .eq("studio_id", context.studio.id)
+      .eq("is_active", true)
+      .eq("visible_to_admin", true)
+      .order("display_order", { ascending: true }),
+  ]);
 
   if (studentError || !student) {
     return null;
@@ -158,7 +160,9 @@ export async function getStudent360(studentId: string) {
 
   const { data: values, error: valuesError } = await supabase
     .from("student_profile_values")
-    .select("field_id,value_text,value_number,value_date,value_boolean,value_json")
+    .select(
+      "field_id,value_text,value_number,value_date,value_boolean,value_json",
+    )
     .eq("studio_id", context.studio.id)
     .eq("student_id", studentId);
 
@@ -176,7 +180,9 @@ export async function getStudent360(studentId: string) {
   const primaryEmail = contacts.find(
     (contact) => contact.type === "EMAIL" && contact.is_primary,
   );
-  const valueByField = new Map((values ?? []).map((value) => [value.field_id, value]));
+  const valueByField = new Map(
+    (values ?? []).map((value) => [value.field_id, value]),
+  );
 
   const profileFields = (fields ?? []).map((field) => {
     const storedValue = valueByField.get(field.id);
