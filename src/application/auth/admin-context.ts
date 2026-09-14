@@ -17,7 +17,8 @@ export type AdminContext = Readonly<{
 
 export async function getAdminContext(): Promise<AdminContext> {
   const supabase = await createSupabaseServerClient();
-  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+  const { data: claimsData, error: claimsError } =
+    await supabase.auth.getClaims();
 
   if (claimsError || !claimsData?.claims?.sub) {
     redirect("/admin/login");
@@ -55,7 +56,8 @@ export async function getAdminContext(): Promise<AdminContext> {
     throw new Error("No se pudieron resolver los roles de la membresía.");
   }
 
-  const roleIds = roleAssignments?.map((assignment) => assignment.role_id) ?? [];
+  const roleIds =
+    roleAssignments?.map((assignment) => assignment.role_id) ?? [];
   const roleCodes =
     roleAssignments?.flatMap((assignment) => {
       const role = Array.isArray(assignment.roles)
