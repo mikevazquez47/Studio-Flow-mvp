@@ -93,8 +93,8 @@ export default async function Student360Page({ params }: Student360PageProps) {
 
       {student.profileStatus === "INCOMPLETE" ? (
         <div className="rounded-[var(--radius-md)] border border-[color-mix(in_srgb,var(--warning)_45%,var(--border))] bg-[color-mix(in_srgb,var(--warning)_10%,var(--surface))] px-4 py-3 text-sm">
-          El perfil está incompleto. Los campos faltantes se mostrarán aquí y podrán
-          completarse sin perder la operación básica de la alumna.
+          El perfil está incompleto. Los campos faltantes se mostrarán aquí y
+          podrán completarse sin perder la operación básica de la alumna.
         </div>
       ) : null}
 
@@ -107,7 +107,9 @@ export default async function Student360Page({ params }: Student360PageProps) {
                 <h2 className="text-2xl font-bold">Perfil de la alumna</h2>
               </div>
               <span className="text-xs text-[var(--muted)]">
-                {student.profileStatus === "COMPLETE" ? "Completo" : "Incompleto"}
+                {student.profileStatus === "COMPLETE"
+                  ? "Completo"
+                  : "Incompleto"}
               </span>
             </div>
 
@@ -133,8 +135,9 @@ export default async function Student360Page({ params }: Student360PageProps) {
             <span className="eyebrow">Actividad</span>
             <h2 className="text-2xl font-bold">Historial</h2>
             <p className="mt-3">
-              Reservaciones, asistencias, compras, pagos y movimientos aparecerán en
-              esta línea de tiempo conforme entren sus dominios al MVP.
+              Reservaciones, asistencias, compras, pagos y movimientos
+              aparecerán en esta línea de tiempo conforme entren sus dominios al
+              MVP.
             </p>
           </section>
         </div>
@@ -152,7 +155,8 @@ export default async function Student360Page({ params }: Student360PageProps) {
             <span className="eyebrow">Próxima clase</span>
             <h2 className="text-xl font-bold">Sin reservaciones</h2>
             <p className="mt-2 text-sm">
-              Las próximas clases se conectarán al motor de reservaciones en Sprint 6.
+              Las próximas clases se conectarán al motor de reservaciones en
+              Sprint 6.
             </p>
           </section>
         </aside>
