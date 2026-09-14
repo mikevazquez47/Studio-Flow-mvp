@@ -9,11 +9,22 @@ const timeFormatter = new Intl.DateTimeFormat("es-MX", {
 
 export default async function AdminHomePage() {
   const { sessions, context } = await getAdminSchedule();
-  const scheduled = sessions.filter((session) => session.status === "scheduled");
+  const scheduled = sessions.filter(
+    (session) => session.status === "scheduled",
+  );
   const nextSession = scheduled[0] ?? null;
-  const reservations = sessions.reduce((sum, session) => sum + session.bookedCount, 0);
-  const present = sessions.reduce((sum, session) => sum + session.presentCount, 0);
-  const waiting = sessions.reduce((sum, session) => sum + session.waitlistCount, 0);
+  const reservations = sessions.reduce(
+    (sum, session) => sum + session.bookedCount,
+    0,
+  );
+  const present = sessions.reduce(
+    (sum, session) => sum + session.presentCount,
+    0,
+  );
+  const waiting = sessions.reduce(
+    (sum, session) => sum + session.waitlistCount,
+    0,
+  );
 
   return (
     <section className="admin-page today-page">
@@ -70,7 +81,12 @@ export default async function AdminHomePage() {
                   <strong>{nextSession.presentCount}</strong> presentes
                 </span>
                 <span>
-                  <strong>{Math.max(nextSession.capacity - nextSession.bookedCount, 0)}</strong>{" "}
+                  <strong>
+                    {Math.max(
+                      nextSession.capacity - nextSession.bookedCount,
+                      0,
+                    )}
+                  </strong>{" "}
                   lugares libres
                 </span>
               </div>
@@ -92,7 +108,9 @@ export default async function AdminHomePage() {
             <div className="today-upcoming-list">
               {scheduled.slice(1, 4).map((session) => (
                 <div className="today-upcoming-row" key={session.id}>
-                  <span>{timeFormatter.format(new Date(session.startsAt))}</span>
+                  <span>
+                    {timeFormatter.format(new Date(session.startsAt))}
+                  </span>
                   <div>
                     <strong>{session.title}</strong>
                     <small>
