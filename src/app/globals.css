@@ -12,7 +12,27 @@
   --warning: #f5b942;
   --danger: #ff5c74;
   --border: #2a2a35;
+  --focus-ring: #ff72b9;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
   --radius-card: 24px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 8px 24px rgb(0 0 0 / 0.16);
+  --shadow-md: 0 18px 48px rgb(0 0 0 / 0.24);
+  --shadow-lg: 0 28px 80px rgb(0 0 0 / 0.32);
 }
 
 @theme inline {
@@ -52,24 +72,30 @@ select {
   font: inherit;
 }
 
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--focus-ring) 75%, transparent);
+  outline-offset: 3px;
+}
+
 .app-shell {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: var(--space-6);
 }
 
 .hero-card {
   width: min(680px, 100%);
-  padding: 32px;
+  padding: var(--space-8);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   background: var(--surface);
+  box-shadow: var(--shadow-md);
 }
 
 .eyebrow {
   display: inline-block;
-  margin-bottom: 14px;
+  margin-bottom: var(--space-3);
   color: var(--accent);
   font-size: 0.82rem;
   font-weight: 700;
@@ -78,7 +104,7 @@ select {
 }
 
 h1 {
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
   font-size: clamp(2rem, 5vw, 3.6rem);
   line-height: 1;
 }
