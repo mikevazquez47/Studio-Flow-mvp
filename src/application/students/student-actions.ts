@@ -20,7 +20,9 @@ export async function createStudentQuick(formData: FormData) {
   const context = await getAdminContext();
 
   if (!context.capabilities.includes("students.write")) {
-    redirect("/admin/alumnas?error=No%20tienes%20permiso%20para%20crear%20alumnas");
+    redirect(
+      "/admin/alumnas?error=No%20tienes%20permiso%20para%20crear%20alumnas",
+    );
   }
 
   const firstName = String(formData.get("firstName") ?? "").trim();
@@ -28,7 +30,9 @@ export async function createStudentQuick(formData: FormData) {
   const phone = String(formData.get("phone") ?? "").trim();
 
   if (!firstName || !phone) {
-    redirect("/admin/alumnas?error=Nombre%20y%20tel%C3%A9fono%20son%20obligatorios");
+    redirect(
+      "/admin/alumnas?error=Nombre%20y%20tel%C3%A9fono%20son%20obligatorios",
+    );
   }
 
   let normalizedPhone: string;
@@ -82,10 +86,9 @@ export async function listStudents(searchTerm?: string) {
   if (normalizedSearch) {
     const safe = normalizedSearch.replace(/[,%()]/g, " ").trim();
     if (safe) {
-      query = query.or(
-        `first_name.ilike.%${safe}%,last_name.ilike.%${safe}%`,
-        { referencedTable: "persons" },
-      );
+      query = query.or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%`, {
+        referencedTable: "persons",
+      });
     }
   }
 
