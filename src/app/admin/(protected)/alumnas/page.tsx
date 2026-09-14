@@ -1,4 +1,7 @@
-import { createStudentQuick, listStudents } from "@/application/students/student-actions";
+import {
+  createStudentQuick,
+  listStudents,
+} from "@/application/students/student-actions";
 
 type StudentsPageProps = {
   searchParams: Promise<{
@@ -8,7 +11,9 @@ type StudentsPageProps = {
   }>;
 };
 
-export default async function StudentsPage({ searchParams }: StudentsPageProps) {
+export default async function StudentsPage({
+  searchParams,
+}: StudentsPageProps) {
   const params = await searchParams;
   const students = await listStudents(params.q);
 
@@ -58,9 +63,12 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
           <div className="overflow-hidden rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)]">
             {students.length === 0 ? (
               <div className="p-8 text-center">
-                <h2 className="text-xl font-bold">Todavía no hay alumnas aquí</h2>
+                <h2 className="text-xl font-bold">
+                  Todavía no hay alumnas aquí
+                </h2>
                 <p className="mt-2">
-                  Registra la primera con el formulario rápido. Nombre y teléfono son suficientes.
+                  Registra la primera con el formulario rápido. Nombre y
+                  teléfono son suficientes.
                 </p>
               </div>
             ) : (
@@ -106,7 +114,8 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
           <span className="eyebrow">Alta rápida</span>
           <h2 className="text-2xl font-bold">Nueva alumna</h2>
           <p className="mt-2 text-sm">
-            Puedes completar el resto del perfil después. No bloqueamos la operación del estudio.
+            Puedes completar el resto del perfil después. No bloqueamos la
+            operación del estudio.
           </p>
 
           <form action={createStudentQuick} className="auth-form mt-6">
@@ -145,7 +154,8 @@ export default async function StudentsPage({ searchParams }: StudentsPageProps) 
               required
             />
             <p className="text-xs text-[var(--muted)]">
-              Incluye lada internacional. Esto mantiene el teléfono listo para acceso y WhatsApp futuros.
+              Incluye lada internacional. Esto mantiene el teléfono listo para
+              acceso y WhatsApp futuros.
             </p>
 
             <button className="primary-button" type="submit">
