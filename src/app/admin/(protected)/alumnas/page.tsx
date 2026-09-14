@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   createStudentQuick,
   listStudents,
@@ -94,15 +95,13 @@ export default async function StudentsPage({
                       </div>
                       <p className="mt-1 text-sm">{student.phone}</p>
                     </div>
-                    <button
-                      type="button"
-                      className="min-h-11 rounded-[var(--radius-md)] border border-[var(--border)] px-4 text-sm font-bold text-[var(--foreground)]"
+                    <Link
+                      href={`/admin/alumnas/${student.id}`}
+                      className="grid min-h-11 place-items-center rounded-[var(--radius-md)] border border-[var(--border)] px-4 text-sm font-bold text-[var(--foreground)]"
                       aria-label={`Abrir perfil de ${student.firstName}`}
-                      disabled
-                      title="Perfil 360 se implementa en esta misma fase"
                     >
                       Ver perfil
-                    </button>
+                    </Link>
                   </article>
                 ))}
               </div>
