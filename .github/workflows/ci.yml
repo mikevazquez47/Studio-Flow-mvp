@@ -23,27 +23,6 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Generate canonical format
-        run: |
-          npx prettier --write \
-            'src/app/admin/(protected)/agenda/page.tsx' \
-            'src/app/admin/(protected)/page.tsx' \
-            'src/app/globals.css' \
-            'src/application/schedule/admin-schedule.ts'
-          mkdir -p formatted/src/app/admin/'(protected)'/agenda
-          mkdir -p formatted/src/application/schedule
-          cp 'src/app/admin/(protected)/agenda/page.tsx' formatted/src/app/admin/'(protected)'/agenda/page.tsx
-          cp 'src/app/admin/(protected)/page.tsx' formatted/src/app/admin/'(protected)'/page.tsx
-          cp src/app/globals.css formatted/src/app/globals.css
-          cp src/application/schedule/admin-schedule.ts formatted/src/application/schedule/admin-schedule.ts
-
-      - name: Upload formatted files
-        uses: actions/upload-artifact@v4
-        with:
-          name: prettier-output
-          path: formatted
-          retention-days: 1
-
       - name: Format check
         run: npm run format:check
 
