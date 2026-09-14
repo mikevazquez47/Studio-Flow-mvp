@@ -11,6 +11,9 @@ const ROLE_CAPABILITIES: Readonly<Record<string, readonly string[]>> = {
     "students.profile_fields.manage",
     "instructors.read",
     "instructors.write",
+    "schedule.read",
+    "schedule.write",
+    "attendance.write",
   ],
   manager: [
     "students.read",
@@ -19,9 +22,19 @@ const ROLE_CAPABILITIES: Readonly<Record<string, readonly string[]>> = {
     "students.profile_fields.manage",
     "instructors.read",
     "instructors.write",
+    "schedule.read",
+    "schedule.write",
+    "attendance.write",
   ],
-  reception: ["students.read", "students.write", "instructors.read"],
-  instructor: ["students.read"],
+  reception: [
+    "students.read",
+    "students.write",
+    "instructors.read",
+    "schedule.read",
+    "schedule.write",
+    "attendance.write",
+  ],
+  instructor: ["students.read", "schedule.read", "attendance.write"],
 };
 
 export type AdminContext = Readonly<{
