@@ -38,7 +38,9 @@ function localDateString(date = new Date()) {
     day: "2-digit",
   }).formatToParts(date);
 
-  const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  const byType = Object.fromEntries(
+    parts.map((part) => [part.type, part.value]),
+  );
   return `${byType.year}-${byType.month}-${byType.day}`;
 }
 
@@ -68,12 +70,16 @@ export async function getAdminSchedule(date = localDateString()) {
   }
 
   const sessionRows = sessions ?? [];
-  const branchIds = [...new Set(sessionRows.map((row) => row.branch_id).filter(Boolean))];
+  const branchIds = [
+    ...new Set(sessionRows.map((row) => row.branch_id).filter(Boolean)),
+  ];
   const disciplineIds = [
     ...new Set(sessionRows.map((row) => row.discipline_id).filter(Boolean)),
   ];
   const instructorIds = [
-    ...new Set(sessionRows.map((row) => row.instructor_member_id).filter(Boolean)),
+    ...new Set(
+      sessionRows.map((row) => row.instructor_member_id).filter(Boolean),
+    ),
   ];
   const sessionIds = sessionRows.map((row) => row.id);
 
@@ -94,7 +100,9 @@ export async function getAdminSchedule(date = localDateString()) {
       sessionIds.length
         ? supabase
             .from("class_bookings")
-            .select("id,class_session_id,person_id,booking_status,attendance_status")
+            .select(
+              "id,class_session_id,person_id,booking_status,attendance_status",
+            )
             .in("class_session_id", sessionIds)
             .order("booked_at", { ascending: true })
         : Promise.resolve({ data: [], error: null }),
@@ -111,23 +119,31 @@ export async function getAdminSchedule(date = localDateString()) {
   }
 
   const bookings = bookingsResult.data ?? [];
-  const personIds = [...new Set(bookings.map((row) => row.person_id).filter(Boolean))];
+  const personIds = [
+    ...new Set(bookings.map((row) => row.person_id).filter(Boolean)),
+  ];
   const peopleResult = personIds.length
     ? await supabase.from("people").select("id,name").in("id", personIds)
     : { data: [], error: null };
 
   if (peopleResult.error) {
-    throw new Error(`No se pudieron cargar las alumnas: ${peopleResult.error.message}`);
+    throw new Error(
+      `No se pudieron cargar las alumnas: ${peopleResult.error.message}`,
+    );
   }
 
-  const branchById = new Map((branchesResult.data ?? []).map((row) => [row.id, row.name]));
+  const branchById = new Map(
+    (branchesResult.data ?? []).map((row) => [row.id, row.name]),
+  );
   const disciplineById = new Map(
     (disciplinesResult.data ?? []).map((row) => [row.id, row.name]),
   );
   const instructorById = new Map(
     (instructorsResult.data ?? []).map((row) => [row.id, row.display_name]),
   );
-  const personById = new Map((peopleResult.data ?? []).map((row) => [row.id, row.name]));
+  const personById = new Map(
+    (peopleResult.data ?? []).map((row) => [row.id, row.name]),
+  );
 
   const bookingsBySession = new Map<string, AdminBooking[]>();
   for (const row of bookings) {
@@ -154,15 +170,18 @@ export async function getAdminSchedule(date = localDateString()) {
       status: row.status,
       branchName: branchById.get(row.branch_id) ?? "Sucursal",
       disciplineName: row.discipline_id
-        ? disciplineById.get(row.discipline_id) ?? null
+        ? (disciplineById.get(row.discipline_id) ?? null)
         : null,
       instructorName: row.instructor_member_id
-        ? instructorById.get(row.instructor_member_id) ?? null
+        ? (instructorById.get(row.instructor_member_id) ?? null)
         : null,
       bookings: sessionBookings,
-      bookedCount: sessionBookings.filter((item) => item.bookingStatus === "booked").length,
-      waitlistCount: sessionBookings.filter((item) => item.bookingStatus === "waitlisted")
-        .length,
+      bookedCount: sessionBookings.filter(
+        (item) => item.bookingStatus === "booked",
+      ).length,
+      waitlistCount: sessionBookings.filter(
+        (item) => item.bookingStatus === "waitlisted",
+      ).length,
       presentCount: sessionBookings.filter((item) =>
         ["present", "late"].includes(item.attendanceStatus),
       ).length,
