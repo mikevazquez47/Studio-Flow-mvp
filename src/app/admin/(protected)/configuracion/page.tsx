@@ -3,7 +3,9 @@ export default function SettingsPage() {
     <section className="admin-page">
       <span className="eyebrow">Admin</span>
       <h1>Configuración</h1>
-      <p>La configuración operativa crecerá por dominio a partir de Sprint 1.</p>
+      <p>
+        La configuración operativa crecerá por dominio a partir de Sprint 1.
+      </p>
     </section>
   );
 }
