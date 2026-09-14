@@ -212,7 +212,10 @@ export default async function Student360Page({
                   </p>
                   <form action={reactivateStudent} className="mt-5">
                     <input type="hidden" name="studentId" value={student.id} />
-                    <button className="primary-button mt-0 w-full px-4" type="submit">
+                    <button
+                      className="primary-button mt-0 w-full px-4"
+                      type="submit"
+                    >
                       Reactivar alumna
                     </button>
                   </form>
