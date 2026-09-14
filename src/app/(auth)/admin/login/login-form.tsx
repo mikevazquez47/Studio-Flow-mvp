@@ -11,7 +11,10 @@ export function AdminLoginForm() {
   return (
     <form action={action} className="grid gap-5">
       <div className="grid gap-2">
-        <label className="text-sm font-medium text-foreground" htmlFor="email">
+        <label
+          className="text-sm font-medium text-foreground"
+          htmlFor="email"
+        >
           Correo electrónico
         </label>
         <input
@@ -26,7 +29,10 @@ export function AdminLoginForm() {
       </div>
 
       <div className="grid gap-2">
-        <label className="text-sm font-medium text-foreground" htmlFor="password">
+        <label
+          className="text-sm font-medium text-foreground"
+          htmlFor="password"
+        >
           Contraseña
         </label>
         <input
