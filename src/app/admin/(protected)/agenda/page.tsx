@@ -23,9 +23,18 @@ function attendanceLabel(value: string) {
 export default async function AgendaPage() {
   const { sessions, date, context } = await getAdminSchedule();
   const day = new Date(`${date}T12:00:00-06:00`);
-  const totalBooked = sessions.reduce((sum, session) => sum + session.bookedCount, 0);
-  const totalCapacity = sessions.reduce((sum, session) => sum + session.capacity, 0);
-  const totalWaitlist = sessions.reduce((sum, session) => sum + session.waitlistCount, 0);
+  const totalBooked = sessions.reduce(
+    (sum, session) => sum + session.bookedCount,
+    0,
+  );
+  const totalCapacity = sessions.reduce(
+    (sum, session) => sum + session.capacity,
+    0,
+  );
+  const totalWaitlist = sessions.reduce(
+    (sum, session) => sum + session.waitlistCount,
+    0,
+  );
 
   return (
     <section className="admin-page schedule-page">
@@ -60,7 +69,9 @@ export default async function AgendaPage() {
       {sessions.length === 0 ? (
         <div className="schedule-empty">
           <strong>No hay clases programadas para hoy.</strong>
-          <p>Cuando agreguemos horarios, aparecerán aquí por orden de inicio.</p>
+          <p>
+            Cuando agreguemos horarios, aparecerán aquí por orden de inicio.
+          </p>
         </div>
       ) : (
         <div className="schedule-list">
@@ -76,7 +87,9 @@ export default async function AgendaPage() {
             return (
               <article className="schedule-session" key={session.id}>
                 <div className="schedule-time">
-                  <strong>{timeFormatter.format(new Date(session.startsAt))}</strong>
+                  <strong>
+                    {timeFormatter.format(new Date(session.startsAt))}
+                  </strong>
                   <span>{timeFormatter.format(new Date(session.endsAt))}</span>
                 </div>
 
@@ -85,7 +98,9 @@ export default async function AgendaPage() {
                     <div>
                       <div className="schedule-title-row">
                         <h2>{session.title}</h2>
-                        <span className={`status-pill status-${session.status}`}>
+                        <span
+                          className={`status-pill status-${session.status}`}
+                        >
                           {session.status === "scheduled"
                             ? "Programada"
                             : session.status === "completed"
@@ -94,7 +109,8 @@ export default async function AgendaPage() {
                         </span>
                       </div>
                       <p>
-                        {session.disciplineName ?? "Clase"} · {session.branchName}
+                        {session.disciplineName ?? "Clase"} ·{" "}
+                        {session.branchName}
                         {session.instructorName
                           ? ` · ${session.instructorName}`
                           : " · Sin instructor asignado"}
@@ -108,14 +124,20 @@ export default async function AgendaPage() {
                     </div>
                   </div>
 
-                  <div className="occupancy-track" aria-label={`${occupancy}% de ocupación`}>
+                  <div
+                    className="occupancy-track"
+                    aria-label={`${occupancy}% de ocupación`}
+                  >
                     <span style={{ width: `${occupancy}%` }} />
                   </div>
 
                   <div className="schedule-session-stats">
                     <span>{session.presentCount} presentes</span>
                     <span>{session.waitlistCount} en espera</span>
-                    <span>{Math.max(session.capacity - session.bookedCount, 0)} lugares libres</span>
+                    <span>
+                      {Math.max(session.capacity - session.bookedCount, 0)}{" "}
+                      lugares libres
+                    </span>
                   </div>
 
                   <details className="booking-details">
@@ -134,7 +156,9 @@ export default async function AgendaPage() {
                                   : "Reservada"}
                               </span>
                             </div>
-                            <span className={`attendance attendance-${booking.attendanceStatus}`}>
+                            <span
+                              className={`attendance attendance-${booking.attendanceStatus}`}
+                            >
                               {attendanceLabel(booking.attendanceStatus)}
                             </span>
                           </div>
