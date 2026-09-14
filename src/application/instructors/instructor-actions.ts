@@ -20,7 +20,11 @@ function normalizeOptionalPhone(value: string) {
 function normalizeOptionalEmail(value: string) {
   const trimmed = value.trim().toLocaleLowerCase("en-US");
   if (!trimmed) return null;
-  if (!trimmed.includes("@") || trimmed.startsWith("@") || trimmed.endsWith("@")) {
+  if (
+    !trimmed.includes("@") ||
+    trimmed.startsWith("@") ||
+    trimmed.endsWith("@")
+  ) {
     throw new Error("INVALID_EMAIL");
   }
   return trimmed;
