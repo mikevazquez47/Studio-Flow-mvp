@@ -64,7 +64,9 @@ export default async function InstructorsPage({
           <div className="overflow-hidden rounded-[var(--radius-card)] border border-[var(--border)] bg-[var(--surface)]">
             {instructors.length === 0 ? (
               <div className="p-8 text-center">
-                <h2 className="text-xl font-bold">Todavía no hay instructores</h2>
+                <h2 className="text-xl font-bold">
+                  Todavía no hay instructores
+                </h2>
                 <p className="mt-2">
                   Agrega el primer perfil de instructor sin crear credenciales
                   de acceso innecesarias.
@@ -83,12 +85,18 @@ export default async function InstructorsPage({
                           {instructor.firstName} {instructor.lastName}
                         </h2>
                         <span className="rounded-full border border-[var(--border)] px-2 py-1 text-xs text-[var(--muted)]">
-                          {instructor.status === "ACTIVE" ? "Activo" : "Inactivo"}
+                          {instructor.status === "ACTIVE"
+                            ? "Activo"
+                            : "Inactivo"}
                         </span>
                       </div>
                       <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[var(--muted)]">
-                        {instructor.phone ? <span>{instructor.phone}</span> : null}
-                        {instructor.email ? <span>{instructor.email}</span> : null}
+                        {instructor.phone ? (
+                          <span>{instructor.phone}</span>
+                        ) : null}
+                        {instructor.email ? (
+                          <span>{instructor.email}</span>
+                        ) : null}
                       </div>
                     </div>
                     <span className="text-xs text-[var(--muted)]">
