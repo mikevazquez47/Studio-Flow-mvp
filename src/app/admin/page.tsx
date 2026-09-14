@@ -3,7 +3,8 @@ import { createSupabaseServerClient } from "@/infrastructure/supabase/server";
 
 export default async function AdminHomePage() {
   const supabase = await createSupabaseServerClient();
-  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+  const { data: claimsData, error: claimsError } =
+    await supabase.auth.getClaims();
 
   if (claimsError || !claimsData?.claims?.sub) {
     redirect("/admin/login");
