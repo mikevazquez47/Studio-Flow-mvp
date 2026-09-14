@@ -84,13 +84,38 @@ select {
   padding: var(--space-6);
 }
 
-.hero-card {
+.hero-card,
+.auth-card {
   width: min(680px, 100%);
   padding: var(--space-8);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   background: var(--surface);
   box-shadow: var(--shadow-md);
+}
+
+.auth-card {
+  width: min(480px, 100%);
+}
+
+.auth-brand {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.brand-mark {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border));
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-elevated));
+  color: var(--accent);
+  font-weight: 800;
+  letter-spacing: -0.04em;
 }
 
 .eyebrow {
@@ -103,14 +128,85 @@ select {
   text-transform: uppercase;
 }
 
+.auth-brand .eyebrow {
+  margin-bottom: var(--space-1);
+}
+
 h1 {
   margin: 0 0 var(--space-3);
   font-size: clamp(2rem, 5vw, 3.6rem);
   line-height: 1;
 }
 
+.auth-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 6vw, 2.45rem);
+}
+
 p {
   margin: 0;
   color: var(--muted);
   line-height: 1.6;
+}
+
+.auth-copy {
+  margin-top: var(--space-6);
+}
+
+.auth-error {
+  margin-top: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--border));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+  color: #ffd9df;
+  font-size: 0.92rem;
+}
+
+.auth-form {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.field-label {
+  margin-top: var(--space-2);
+  color: var(--foreground);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.field-input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-elevated);
+  color: var(--foreground);
+  transition: border-color 140ms ease;
+}
+
+.field-input::placeholder {
+  color: #6e6e7c;
+}
+
+.field-input:hover {
+  border-color: #3a3a47;
+}
+
+.primary-button {
+  min-height: 50px;
+  margin-top: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: #16050e;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.primary-button:hover {
+  filter: brightness(1.06);
 }
