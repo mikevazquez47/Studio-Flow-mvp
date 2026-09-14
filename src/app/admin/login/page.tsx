@@ -5,9 +5,7 @@ type LoginPageProps = {
   searchParams: Promise<{ error?: string }>;
 };
 
-export default async function AdminLoginPage({
-  searchParams,
-}: LoginPageProps) {
+export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   const { error } = await searchParams;
 
   async function login(formData: FormData) {
@@ -17,9 +15,7 @@ export default async function AdminLoginPage({
     const password = String(formData.get("password") ?? "");
 
     if (!email || !password) {
-      redirect(
-        "/admin/login?error=Completa%20correo%20y%20contrase%C3%B1a",
-      );
+      redirect("/admin/login?error=Completa%20correo%20y%20contrase%C3%B1a");
     }
 
     const supabase = await createSupabaseServerClient();
