@@ -1,0 +1,3 @@
+QA-only deployment trigger for the mvp-qa-20260914 branch.
+New Vercel project configuration: framework preset Other.
+No production deployment is associated with this file.
